@@ -1,0 +1,205 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet id="1.0.0" author="victor.kuzma">
+
+        <createTable tableName="users">
+            <column name="id" type="UUID">
+                <constraints primaryKey="true" nullable="false" unique="true"></constraints>
+            </column>
+
+            <column name="first_name" type="VARCHAR(255)">
+                <constraints nullable="false" unique="false"></constraints>
+            </column>
+
+            <column name="last_name" type="VARCHAR(255)">
+                <constraints nullable="false" unique="false"></constraints>
+            </column>
+
+            <column name="email" type="VARCHAR(255)">
+                <constraints nullable="false" unique="true"></constraints>
+            </column>
+
+            <column name="password" type="VARCHAR(255)">
+                <constraints nullable="false"></constraints>
+            </column>
+
+            <column name="country" type="VARCHAR(255)">
+                <constraints nullable="false"></constraints>
+            </column>
+
+            <column name="region_id" type="UUID">
+                <constraints nullable="false"></constraints>
+            </column>
+
+            <column name="locality_id" type="UUID">
+                <constraints nullable="true"></constraints>
+            </column>
+
+            <column name="is_deleted" type="boolean" defaultValueBoolean="false">
+                <constraints nullable="false"></constraints>
+            </column>
+
+        </createTable>
+
+    </changeSet>
+
+    <changeSet id="1.0.1" author="victor.kuzma">
+        <createTable tableName="roles">
+            <column name="id" type="UUID">
+                <constraints primaryKey="true" nullable="false" unique="true"></constraints>
+            </column>
+
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false" unique="true"></constraints>
+            </column>
+
+        </createTable>
+    </changeSet>
+
+    <changeSet id="1.0.2" author="victor.kuzma">
+        <createTable tableName="user_roles">
+
+            <column name="user_id" type="UUID">
+                <constraints nullable="false"></constraints>
+            </column>
+
+            <column name="role_id" type="UUID">
+                <constraints nullable="false"></constraints>
+            </column>
+
+        </createTable>
+    </changeSet>
+
+    <changeSet id="1.0.3" author="victor.kuzma">
+        <createTable tableName="region">
+            <column name="id" type="UUID">
+                <constraints primaryKey="true" nullable="false" unique="true"></constraints>
+            </column>
+
+            <column name="name" type="VARCHAR(255)">
+                <constraints primaryKey="true" nullable="false" unique="true"></constraints>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="1.0.4" author="victor.kuzma">
+        <createTable tableName="locality">
+            <column name="id" type="UUID">
+                <constraints primaryKey="true" nullable="false" unique="true"></constraints>
+            </column>
+
+            <column name="name" type="VARCHAR(255)">
+                <constraints primaryKey="true" nullable="false" unique="true"></constraints>
+            </column>
+
+            <column name="region_id" type="UUID">
+                <constraints nullable="true"></constraints>
+            </column>
+
+        </createTable>
+    </changeSet>
+
+    <changeSet id="1.0.5" author="victor.kuzma">
+        <addForeignKeyConstraint baseTableName="user_roles"
+                                 baseColumnNames="user_id"
+                                 constraintName="fk_user_roles_user"
+                                 referencedTableName="users"
+                                 referencedColumnNames="id"
+                                 onDelete="RESTRICT"
+                                 onUpdate="CASCADE"/>
+    </changeSet>
+
+    <changeSet id="1.0.6" author="victor.kuzma">
+        <addForeignKeyConstraint baseTableName="user_roles"
+                                 baseColumnNames="role_id"
+                                 constraintName="fk_user_roles_roles"
+                                 referencedTableName="roles"
+                                 referencedColumnNames="id"
+                                 onDelete="RESTRICT"
+                                 onUpdate="CASCADE"/>
+    </changeSet>
+
+    <changeSet id="1.0.7" author="victor.kuzma">
+        <addForeignKeyConstraint baseTableName="users"
+                                 baseColumnNames="region_id"
+                                 constraintName="fk_region_user_region"
+                                 referencedTableName="region"
+                                 referencedColumnNames="id"
+                                 onDelete="RESTRICT"
+                                 onUpdate="CASCADE"/>
+    </changeSet>
+
+    <changeSet id="1.0.8" author="victor.kuzma">
+        <addForeignKeyConstraint baseTableName="users"
+                                 baseColumnNames="locality_id"
+                                 constraintName="fk_locality_user_locality"
+                                 referencedTableName="locality"
+                                 referencedColumnNames="id"
+                                 onDelete="RESTRICT"
+                                 onUpdate="CASCADE"/>
+    </changeSet>
+
+
+    <changeSet id="1.0.9" author="victor.kuzma">
+        <addForeignKeyConstraint baseTableName="locality"
+                                 baseColumnNames="region_id"
+                                 constraintName="fk_region_locality_region"
+                                 referencedTableName="region"
+                                 referencedColumnNames="id"
+                                 onDelete="RESTRICT"
+                                 onUpdate="CASCADE"/>
+    </changeSet>
+
+
+    <changeSet id="1.0.10" author="victor.kuzma">
+
+        <insert tableName="roles">
+            <column name="id" value="74b37cd4-75aa-4871-b17b-a5160428e589"></column>
+            <column name="name" value="ADMIN_ROLE"></column>
+        </insert>
+
+        <insert tableName="roles">
+            <column name="id" value="35cb41dd-3edb-4483-a1fe-fc315243d2f8"></column>
+            <column name="name" value="USER_ROLE"></column>
+        </insert>
+
+        <insert tableName="region">
+            <column name="id" value="1b01401f-e75d-4906-a8d3-3527a449c85e"></column>
+            <column name="name" value="Nevada"></column>
+        </insert>
+
+        <insert tableName="locality">
+            <column name="id" value="73f492e5-5167-4231-ab68-6ce0c4c67375"></column>
+            <column name="name" value="Carson City"></column>
+            <column name="region_id"
+                    valueComputed="(SELECT id FROM region WHERE id = '1b01401f-e75d-4906-a8d3-3527a449c85e')"></column>
+        </insert>
+
+        <insert tableName="locality">
+            <column name="id" value="4892d2f3-eb2f-4002-b462-bf2090222705"></column>
+            <column name="name" value="Las Vegas"></column>
+            <column name="region_id"
+                    valueComputed="(SELECT id FROM region WHERE id = '1b01401f-e75d-4906-a8d3-3527a449c85e')"></column>
+        </insert>
+
+        <insert tableName="users">
+            <column name="id" value="27399e60-7f7d-48ae-abec-6d58c566c0ca"></column>
+            <column name="first_name" value="FirstNameTestTwo"></column>
+            <column name="last_name" value="LastNameTestTwo"></column>
+            <column name="email" value="testtwoemai@com.ua"></column>
+            <!-- password Victor0394-->
+            <column name="password"
+                    value="$2y$12$8HYtt3JUWzUT8ch9MGNOievg9.Wn.hJ3yABEDbqraxluzyW0HegMC"></column>
+            <column name="country" value="USA"></column>
+            <column name="region_id" value="1b01401f-e75d-4906-a8d3-3527a449c85e"></column>
+            <column name="locality_id" value="73f492e5-5167-4231-ab68-6ce0c4c67375"></column>
+        </insert>
+
+    </changeSet>
+
+
+</databaseChangeLog>
+
