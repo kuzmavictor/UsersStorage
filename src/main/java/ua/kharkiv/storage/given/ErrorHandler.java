@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ser.std.MapSerializer;
 import lombok.Getter;
 import org.springframework.stereotype.Service;
 import ua.kharkiv.storage.dto.deserializer.RegistrationCredentialsDeserializer;
+import ua.kharkiv.storage.validator.Validator;
 
 import java.util.HashMap;
 import java.util.Map;

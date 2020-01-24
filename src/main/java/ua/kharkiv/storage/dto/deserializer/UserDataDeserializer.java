@@ -10,8 +10,8 @@ import java.io.IOException;
 public class UserDataDeserializer extends AbstractJsonDeserializer {
 
     @Override
-    public BaseDto deserialize(JsonParser p, DeserializationContext ctxt) throws IOException,
-                                                                                 JsonProcessingException {
+    public BaseDto deserialize(JsonParser p, DeserializationContext ctxt)
+            throws IOException, JsonProcessingException {
         return null;
     }
 }
